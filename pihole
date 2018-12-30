@@ -2,8 +2,6 @@
 #
 cd $(dirname $0); top=$(pwd); cd config
 
-wait_for_up=${1:-30} # set up the time before the ./lists script is run
-
 os=$(uname)
 case $os in
   Linux)
@@ -55,5 +53,19 @@ docker run -d \
 
 # echo -n "Your password for https://${IP}/admin/ is "
 # docker logs pihole 2> /dev/null | grep 'password'
-sleep $wait_for_up
-docker exec -i pihole /tmp/run_config
+echo ""
+echo "Pihole is coming up..."
+echo ""
+
+status=$(docker exec pihole pihole status 2>&1 | grep blocking)
+while [ -z "$status" ]
+do
+  status=$(docker exec pihole pihole status 2>&1 | grep blocking)
+  echo "Waiting for pihole..."
+  sleep 1
+done
+echo "$status"
+echo ""
+echo "pihole is ready. Running our configuration script."
+echo ""
+docker exec pihole /tmp/run_config

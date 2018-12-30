@@ -5,6 +5,11 @@
 
 echo "" | pihole -a -p # reset password
 
+ADLIST=/etc/pihole/adlists.list
+if grep -q 'hobo.house list' $ADLIST
+then
+  echo "hobo.house list already present"
+else
 tee -a /etc/pihole/adlists.list >/dev/null << EOF
 ### hobo.house list
 https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
@@ -37,6 +42,7 @@ https://reddestdream.github.io/Projects/MinimalHosts/etc/MinimalHostsBlocker/min
 https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.Spam/hosts
 https://v.firebog.net/hosts/static/w3kbl.txt
 EOF
+fi
 
 pihole -w youtu.be opensubtitles.org www.opensubtitles.org t.co
 
