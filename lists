@@ -3,11 +3,9 @@
 # Setup from https://hobo.house/2018/02/27/block-advertising-with-pi-hole-and-raspberry-pi/
 #
 
-D="docker exec pihole"
+echo "" | pihole -a -p # reset password
 
-echo "" | $D pihole -a -p
-
-$D pihole tee -a /etc/pihole/adlists.list >/dev/null << EOF
+tee -a /etc/pihole/adlists.list >/dev/null << EOF
 ### hobo.house list
 https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
 https://mirror1.malwaredomains.com/files/justdomains
@@ -40,17 +38,15 @@ https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.Spam/hosts
 https://v.firebog.net/hosts/static/w3kbl.txt
 EOF
 
-$D pihole -g
+pihole -w youtu.be opensubtitles.org www.opensubtitles.org t.co
 
-$D pihole -w youtu.be opensubtitles.org www.opensubtitles.org t.co
-
-$D pihole -w pubsub.plex.tv plugins.plex.tv chapterdb.plex.tv cloudfront.net \
+pihole -w pubsub.plex.tv plugins.plex.tv chapterdb.plex.tv cloudfront.net \
 plex.direct csi.gstatic.com dl.opensubtitles.org speedvideo.net ton.twimg.com \
 twimg.com chapterdb.plex.tv tinyurl.com bit.ly ton.twimg.com dropbox.com \
 pubsub.plex.bz fonts.gstatic.com assets.adobedtm.com www.googletagmanager.com \
 links.services.disqus.com ump.plex.tv meta.plex.tv goo.gl
 
-$D pihole -b dxp.baidu.com hmma.baidu.com pasta.esfile.duapps.com \
+pihole -b dxp.baidu.com hmma.baidu.com pasta.esfile.duapps.com \
 neweegg.net config.a-mo.net nrc.tapas.net xpu.samsungelectronics.com \
 upu.samsungelectronics.com dns.msftncsi.com bn2wns1b.wns.windows.com \
 a-0001.a-msedge.net msnbot-65-52-108-90.search.msn.com a-0011.a-msedge.net \
@@ -87,13 +83,13 @@ browser.pipe.aria.microsoft.com tracking.campaign-tracking-service.placelocal.co
 primoitaliablob.blob.core.windows.net srv.dc-1.net \
 wdcpeurope.microsoft.akadns.net wdcp.microsoft.akadns.net
 
-$D pihole -b open.spotify.com ads.converge-digital.com \
+pihole -b open.spotify.com ads.converge-digital.com \
 heads-ak.spotify.com.edgesuite.net i.scdn.co audio-fac.scdn.co \
 beta.spotify.map.fastly.net spclient.wg.spotify.com \
 platform-lookaside.fbsbx.com
 
-$D pihole -b ads.aws.viber.com
+pihole -b ads.aws.viber.com
 
-$D pihole --wild bidr.io 88-f.net mythings.com
+pihole --wild bidr.io 88-f.net mythings.com
 
-$D pihole -g
+pihole -g

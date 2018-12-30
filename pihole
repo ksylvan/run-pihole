@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-cd $(dirname $0); cd config
+cd $(dirname $0); top=$(pwd); cd config
 
 wait_for_up=${1:-30} # set up the time before the ./lists script is run
 
@@ -45,6 +45,7 @@ docker run -d \
     -p 443:443 \
     -v "${DOCKER_CONFIGS}/pihole/:/etc/pihole/" \
     -v "${DOCKER_CONFIGS}/dnsmasq.d/:/etc/dnsmasq.d/" \
+    -v $top/lists:/tmp/run_config \
     -e ServerIP="${IP}" \
     -e ServerIPv6="${IPv6}" \
     --restart=unless-stopped \
@@ -55,4 +56,4 @@ docker run -d \
 # echo -n "Your password for https://${IP}/admin/ is "
 # docker logs pihole 2> /dev/null | grep 'password'
 sleep $wait_for_up
-../lists
+docker exec -i pihole /tmp/run_config
