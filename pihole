@@ -29,9 +29,13 @@ echo "IPv6: ${IPv6}"
 if [ -z "$PIHOLE_DNS" ]; then PIHOLE_DNS="9.9.9.9"; fi
 
 D_DNS="--dns 127.0.0.1"
+PIHOLE_DNS_ARGS=""
+n=1
 for i in $PIHOLE_DNS
 do
+  PIHOLE_DNS_ARGS="$PIHOLE_DNS_ARGS -e DNS${n}=$i"
   D_DNS="$D_DNS --dns $i"
+  ((n++))
 done
 
 # Uncomment this to get DHCP in pihole
@@ -48,6 +52,7 @@ docker run -d \
     -v $top/lists:/tmp/run_config \
     -e ServerIP="${IP}" \
     -e ServerIPv6="${IPv6}" \
+    $PIHOLE_DNS_ARGS \
     --restart=unless-stopped \
     --cap-add=NET_ADMIN \
     $D_DNS \
