@@ -55,7 +55,7 @@ for i in $PIHOLE_DNS
 do
   PIHOLE_DNS_ARGS="$PIHOLE_DNS_ARGS -e DNS${n}=$i"
   D_DNS="$D_DNS --dns $i"
-  ((n++))
+  (( n=n+1 ))
 done
 
 # Uncomment this to get DHCP in pihole
