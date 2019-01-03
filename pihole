@@ -3,30 +3,50 @@
 cd $(dirname $0); top=$(pwd); cd config
 
 os=$(uname)
+
+tmp=/tmp/network$$
+cleanup() {
+  rm -f $tmp
+}
+trap cleanup EXIT
+
 case $os in
   Linux)
+    dev="$(ip route get 8.8.8.8 | head -1 | awk '{print $5}')"
     IP_LOOKUP="$(ip route get 8.8.8.8 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')"  # May not work for VPN / tun0
     IPv6_LOOKUP="$(ip -6 route get 2001:4860:4860::8888 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')"  # May not work for VPN / tun0
+    nmcli dev show $dev | grep -i dns > $tmp
+    DNS1=$(grep 'IP4.DNS.1.' $tmp | awk '{print $2}')
+    DNS2=$(grep 'IP4.DNS.2.' $tmp | awk '{print $2}')
     ;;
   Darwin)
     interface=$(route get 8.8.8.8 | grep interface | awk '{print $2}')
     IP_LOOKUP=$(ifconfig $interface | grep 'inet ' | awk '{print $2}')
     IPv6_LOOKUP=$(ifconfig $interface | grep 'inet6 ' |
       awk '{print $2}' | sed 's/%.*//')
+    scutil --dns > $tmp
+    DNS1=$(grep 'nameserver.0.' $tmp | awk '{print $3}' | head -1)
+    DNS2=$(grep 'nameserver.1.' $tmp | awk '{print $3}' | head -1)
     ;;
 esac
 
 IP="${IP:-$IP_LOOKUP}"  # use $IP, if set, otherwise IP_LOOKUP
 IPv6="${IPv6:-$IPv6_LOOKUP}"  # use $IPv6, if set, otherwise IP_LOOKUP
 DOCKER_CONFIGS="$(pwd)"  # Default of directory you run this from, update to where ever.
+DNS1="${DNS1:-9.9.9.9}" # Fall back to Quad9
 
 echo "### Make sure your IPs are correct, hard code ServerIP ENV VARs if necessary"
 echo "IP: ${IP}"
 echo "IPv6: ${IPv6}"
+echo "DNS servers: ${DNS1} ${DNS2}"
 
-# If PIHOLE_DNS environment is not set, use these defaults:
+# If PIHOLE_DNS environment is not set, try using existing DNS config.
 #
-if [ -z "$PIHOLE_DNS" ]; then PIHOLE_DNS="9.9.9.9"; fi
+if [ $# -gt 0 ]; then
+  PIHOLE_DNS="$@"
+else
+  PIHOLE_DNS="${DNS1} ${DNS2}"
+fi
 
 D_DNS="--dns 127.0.0.1"
 PIHOLE_DNS_ARGS=""

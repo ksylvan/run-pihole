@@ -14,26 +14,33 @@ In its simplest form, just run:
 ./pihole
 ```
 
-The `./lists` script to set up the pihole config as explained in this blog
-post: https://hobo.house/2018/02/27/block-advertising-with-pi-hole-and-raspberry-pi/
+The script attempts to glean the existing DNS configuration and to
+configure the container to use those servers as its upstream
+resolvers.
 
-The `pihole` shell script waits for the comtainer to be operational and then
-it runs the configuration. Configuration data persists in the `./config/`
+If that won't work, just pass the explicit servers as arguments
+on the command line.
+
+For examplem to set up pihole to hit Cloudflare's servers, do this:
+
+```
+./pihole 1.1.1.1
+```
+
+## PiHole configuration (additional block lists, etc.)
+
+The `./lists` script here sets up the pihole configuration as
+explained in this blog post:
+https://hobo.house/2018/02/27/block-advertising-with-pi-hole-and-raspberry-pi/
+
+The `pihole` shell script waits for the container to be operational and then
+it runs the configuration script. Configuration data persists in the `./config/`
 directory.
 
 By default, this script is set up to use the Quad9 DNS servers.
 
-If that won't work (or you need to run the container in a corporate network),
-just set the DNS servers in the `PIHOLE_DNS` environment variable.
-
-```
-PIHOLE_DNS="1.1.1.1" ./pihole
-```
-
-The above will set up pihole to hit Cloudflare's servers.
-
-Once the pihole container is up, set up your laptop's DNS to use 127.0.0.1
-as its DNS.
+Once the pihole container is up, set up your laptop's DNS to
+use 127.0.0.1 as its DNS.
 
 ## Set up MacOS DNS settings via commandline
 
