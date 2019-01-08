@@ -20,6 +20,7 @@ case $os in
     DNS2=$(grep 'IP4.DNS.2.' $tmp | awk '{print $2}')
     ;;
   Darwin)
+    EXTRA_RUN_ARGS="-h $(scutil --get LocalHostName)"
     interface=$(route get 8.8.8.8 | grep interface | awk '{print $2}')
     IP_LOOKUP=$(ifconfig $interface | grep 'inet ' | awk '{print $2}')
     IPv6_LOOKUP=$(ifconfig $interface | grep 'inet6 ' |
@@ -63,6 +64,7 @@ done
 
 docker run -d \
     --name pihole \
+    ${EXTRA_RUN_ARGS} \
     -p 53:53/tcp -p 53:53/udp \
     $DHCP \
     -p 80:80 \
