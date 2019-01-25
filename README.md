@@ -80,7 +80,7 @@ docker pull pihole/pihole
 
 ## Convenient aliases
 
-After the `pihole` script runs, it outputs a messahe like this:
+After the `pihole` script runs, it outputs a message like this:
 
 ```
 Source the /home/yourlogin/src/run-pihole/aliases.bash file for some useful aliases.
