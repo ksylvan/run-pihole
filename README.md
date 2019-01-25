@@ -77,3 +77,38 @@ docker rm -f pihole
 docker pull pihole/pihole
 ./pihole
 ```
+
+## Convenient aliases
+
+After the `pihole` script runs, it outputs a messahe like this:
+
+```
+Source the /home/yourlogin/src/run-pihole/aliases.bash file for some useful aliases.
+
+. /home/yourlogin/src/run-pihole/aliases.bash
+```
+
+#### start-pihole
+
+Starts the pihole container and sets the local DNS to 127.0.0.1
+
+#### stop-pihole
+
+Stops pihole and resets DNS to defaults.
+
+#### purge-pihole
+
+Stop pihole and remove the contents of the `config/` directory, so pihole
+will recreate it on startup.
+
+#### set-dns-local
+
+Set the DNS to 127.0.0.1
+
+#### set-dns-empty
+
+Reset DNS setting to defaults.
+
+#### get-dns-server
+
+Show the current list of DNS servers.

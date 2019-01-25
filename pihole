@@ -98,3 +98,8 @@ echo ""
 echo "pihole is ready. Running our configuration script."
 echo ""
 docker exec pihole /tmp/run_config
+
+echo ""
+echo "Source the $top/aliases.bash file for some useful aliases."
+echo ""
+echo ". $top/aliases.bash"
